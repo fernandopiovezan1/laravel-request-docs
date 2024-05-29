@@ -252,7 +252,7 @@ class LaravelRequestDocs
                 try {
                     $requestClassName = $namedType->getName();
 
-                    $reflectionClass  = new ReflectionClass($requestClassName);
+                    $reflectionClass = new ReflectionClass($requestClassName);
                     try {
                         $requestObject = $reflectionClass->newInstance();
                     } catch (Throwable $th) {
@@ -325,31 +325,29 @@ class LaravelRequestDocs
 
     public function appendExample(Doc $doc): void
     {
-            try {
-                $controllerName = class_basename($doc->getController());
-                $modelName = Str::replace('APIController', '', $controllerName);
-                $fullModelName = "App\\Models\\" . $modelName;
+        try {
+            $controllerName = class_basename($doc->getController());
+            $modelName      = Str::replace('APIController', '', $controllerName);
+            $fullModelName  = "App\\Models\\" . $modelName;
 
-                if (!class_exists($fullModelName)) {
-                    return;
-                }
-
-                /** @var \Illuminate\Database\Eloquent\Model $model */
-                $model = app($fullModelName);
-
-                if (!method_exists($model, 'factory')) {
-                    return;
-                }
-
-                $excludeFields = config('request-docs.exclude_fields') ?? [];
-                $example = $model->factory()->make()->toArray();
-                $example = array_filter($example, fn($key) => !in_array($key, $excludeFields), ARRAY_FILTER_USE_KEY);
-                $doc->mergeExamples($example);
-
-            } catch (Throwable $e) {
-                // Do nothing.
+            if (! class_exists($fullModelName)) {
+                return;
             }
 
+            /** @var \Illuminate\Database\Eloquent\Model $model */
+            $model = app($fullModelName);
+
+            if (! method_exists($model, 'factory')) {
+                return;
+            }
+
+            $excludeFields = config('request-docs.exclude_fields') ?? [];
+            $example       = $model->factory()->make()->toArray();
+            $example       = array_filter($example, fn ($key) => ! in_array($key, $excludeFields), ARRAY_FILTER_USE_KEY);
+            $doc->mergeExamples($example);
+        } catch (Throwable $e) {
+            // Do nothing.
+        }
     }
 
     /**
