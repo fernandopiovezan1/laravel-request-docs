@@ -107,7 +107,8 @@ export default function ApiInfoRules(props: Props) {
                                             <code className="text-xs text-gray-500">Example: </code>
                                         </div>
                                         <div className="col-span-4">
-                                            <code className="text-xs text-gray-500">{infos?.[mainRule]?.example.toString()} </code>
+                                            <code
+                                                className="text-xs text-gray-500">{infos?.[mainRule]?.example.toString()} </code>
                                         </div>
                                     </div>
                                 )}

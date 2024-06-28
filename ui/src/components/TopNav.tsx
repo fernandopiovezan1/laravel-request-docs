@@ -83,6 +83,7 @@ export default function TopNav(props: Props) {
         window.location.reload()
     }
 
+    const getUrl = `/request-docs/api?openapi=true?json=true&showGet=${showGet}&showPost=${showPost}&showDelete=${showDelete}&showPut=${showPut}&showPatch=${showPatch}&showHead=${showHead}`;
 
     const toggleDarkMode = () => {
         const dataTheme = document.documentElement.getAttribute('data-theme');
@@ -256,7 +257,7 @@ export default function TopNav(props: Props) {
                         </div>
                     </div>
                     <div className="ml-1 ">
-                        <a className="btn btn-ghost btn-sm" href='/request-docs/api?openapi=true' target="_blank">
+                        <a className="btn btn-ghost btn-sm" href={getUrl} target="_blank">
                             <span className="pr-1">
                                 <ArrowUpRightIcon className="h-6 w-6" />
                             </span>
