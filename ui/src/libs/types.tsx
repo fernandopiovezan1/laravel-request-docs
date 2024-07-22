@@ -37,6 +37,7 @@ export interface IAPIInfo {
     field_info: IAPIFieldInfos;
     rules_order: string[];
     tag: string;
+    method_help: string;
 
 }
 

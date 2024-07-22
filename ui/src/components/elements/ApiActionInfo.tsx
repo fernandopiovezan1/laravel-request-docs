@@ -5,7 +5,7 @@ import type { IAPIInfo } from '../../libs/types'
 import { responsesText } from '../../libs/constants'
 import ReactMarkdown from 'react-markdown'
 import remarkGfm from 'remark-gfm'
-import { ChevronRightIcon, CodeBracketIcon } from '@heroicons/react/24/outline';
+import {ChevronRightIcon, InformationCircleIcon, QuestionMarkCircleIcon} from '@heroicons/react/24/outline';
 import ApiActionCurl from './ApiActionCurl';
 
 interface Props {
@@ -27,71 +27,91 @@ export default function ApiActionInfo(props: Props) {
                 )}
                 <table className="table table-fixed table-compact">
                     <tbody>
-                        <tr>
-                            <th className='w-2/6'>Method</th>
-                            <td>
+                    <tr>
+                        <th className='w-2/6'>Method</th>
+                        <td>
                                 <span className={`method-${lrdDocsItem.http_method} uppercase`}>
                                     {lrdDocsItem.http_method}
                                 </span>
+                        </td>
+                    </tr>
+                    {lrdDocsItem.controller && (
+                        <tr>
+                            <th className='w-2/6'>Controller</th>
+                            <td>{lrdDocsItem.controller}</td>
+                        </tr>
+                    )}
+                    {lrdDocsItem.method && (
+                        <tr>
+                            <th className='w-2/6'>Function</th>
+                            <td>{lrdDocsItem.method}</td>
+                        </tr>
+                    )}
+                    {lrdDocsItem.middlewares.length != 0 && (
+                        <tr>
+                            <th className='w-2/6'>Middlewares</th>
+                            <td className='no-scrollbar'>
+                                {lrdDocsItem.middlewares.map((middleware) => (
+                                    <div key={shortid.generate()}>
+                                        <span className="badge badge-ghost badge-md mb-1 rounded-sm">{middleware}</span>
+                                        <br/>
+                                    </div>
+                                ))}
                             </td>
                         </tr>
-                        {lrdDocsItem.controller && (
-                            <tr>
-                                <th className='w-2/6'>Controller</th>
-                                <td>{lrdDocsItem.controller}</td>
-                            </tr>
-                        )}
-                        {lrdDocsItem.method && (
-                            <tr>
-                                <th className='w-2/6'>Function</th>
-                                <td>{lrdDocsItem.method}</td>
-                            </tr>
-                        )}
-                        {lrdDocsItem.middlewares.length != 0 && (
-                            <tr>
-                                <th className='w-2/6'>Middlewares</th>
-                                <td className='no-scrollbar'>
-                                    {lrdDocsItem.middlewares.map((middleware) => (
+                    )}
+                    <tr>
+                        <th className='w-2/6'>
+                            Status Codes
+                        </th>
+                        <td>
+                            <div className="collapse">
+                                <input type="checkbox"/>
+                                <div className="collapse-title text-sm text-slate-500 pl-0 mt-2">
+                                    Show Response codes for this request
+                                    <ChevronRightIcon className='inline-block w-4 h-4 ml-1'/>
+                                </div>
+                                <div className="collapse-content p-0">
+                                    {lrdDocsItem.responses && lrdDocsItem.responses.map((response) => (
                                         <div key={shortid.generate()}>
-                                            <span className="badge badge-ghost badge-md mb-1 rounded-sm">{middleware}</span>
-                                            <br />
+                                            <div className={`response response-${response}`}>
+                                                - {response} &nbsp; {responsesText[response]}
+                                            </div>
                                         </div>
                                     ))}
-                                </td>
-                            </tr>
-                        )}
-                        <tr>
-                            <th className='w-2/6'>
-                                Status Codes
-                            </th>
-                            <td>
-                                <div className="collapse">
-                                    <input type="checkbox" />
-                                    <div className="collapse-title text-sm text-slate-500 pl-0 mt-2">
-                                        Show Response codes for this request
-                                        <ChevronRightIcon className='inline-block w-4 h-4 ml-1' />
-                                    </div>
-                                    <div className="collapse-content p-0">
-                                        {lrdDocsItem.responses && lrdDocsItem.responses.map((response) => (
-                                            <div key={shortid.generate()}>
-                                                <div className={`response response-${response}`}>
-                                                    - {response} &nbsp; {responsesText[response]}
-                                                </div>
-                                            </div>
-                                        ))}
-                                    </div>
                                 </div>
-                            </td>
-                        </tr>
+                            </div>
+                        </td>
+                    </tr>
+                    <tr>
+                        <th className='w-2/6'>
+                            Curl
+                        </th>
+                        <td>
+                            <ApiActionCurl curlCommand={curlCommand}/>
+                        </td>
+                    </tr>
+                    {lrdDocsItem.method_help.length != 0 && (
                         <tr>
-                            <th className='w-2/6'>
-                                <CodeBracketIcon className='inline-block w-4 h-4 mr-1' />
-                                Curl
-                            </th>
-                            <td>
-                                <ApiActionCurl curlCommand={curlCommand} />
-                            </td>
-                        </tr>
+                        <th className='w-2/6'>
+                            Help
+                        </th>
+                        <td>
+                            <div className="collapse">
+                                <input type="checkbox"/>
+                                <div className="collapse-title text-sm text-slate-500 pl-0 mt-2">
+                                    Show help for this request
+                                    <ChevronRightIcon className='inline-block w-4 h-4 ml-1'/>
+                                </div>
+                                <div className="collapse-content p-0">
+                                    <ReactMarkdown remarkPlugins={[remarkGfm]} className="markdown">
+                                        {lrdDocsItem.method_help}
+                                    </ReactMarkdown>
+                                </div>
+                            </div>
+                        </td>
+                    </tr>
+                    )}
                     </tbody>
                 </table>
             </div>

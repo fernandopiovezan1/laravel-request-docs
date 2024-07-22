@@ -63,7 +63,8 @@ class LaravelRequestDocs
     }
 
     /**
-     * Loop and split {@see \Rakutentech\LaravelRequestDocs\Doc} by {@see \Rakutentech\LaravelRequestDocs\Doc::$methods}.
+     * Loop and split {@see \Rakutentech\LaravelRequestDocs\Doc}
+     * by {@see \Rakutentech\LaravelRequestDocs\Doc::$methods}.
      *
      * @param  \Illuminate\Support\Collection<int, \Rakutentech\LaravelRequestDocs\Doc>  $docs
      * @return \Illuminate\Support\Collection<int, \Rakutentech\LaravelRequestDocs\Doc>
@@ -120,7 +121,8 @@ class LaravelRequestDocs
     }
 
     /**
-     * Group by `$groupBy`. {@see \Rakutentech\LaravelRequestDocs\Doc::$group} and {@see \Rakutentech\LaravelRequestDocs\Doc::$groupIndex} will be set.
+     * Group by `$groupBy`. {@see \Rakutentech\LaravelRequestDocs\Doc::$group
+     * and {@see \Rakutentech\LaravelRequestDocs\Doc::$groupIndex} will be set.
      * The return collection is always sorted by `group`, `group_index`.
      *
      * @param  \Illuminate\Support\Collection<int, \Rakutentech\LaravelRequestDocs\Doc>  $docs
@@ -229,7 +231,8 @@ class LaravelRequestDocs
                 config('request-docs.rules_order') ?? [],
                 '',
                 '',
-                $tag
+                $tag,
+                '',
             );
 
             $docs->push($doc);
@@ -288,6 +291,11 @@ class LaravelRequestDocs
                             $requestObject = $reflectionClass->newInstanceWithoutConstructor();
                         }
 
+
+                        if (isset(config('request-docs.method_help')[$doc->getMethod()])) {
+                            $doc->setMethodHelp(config('request-docs.method_help')[$doc->getMethod()]);
+                        }
+
                         foreach (config('request-docs.rules_methods') as $requestMethod) {
                             if (!method_exists($requestObject, $requestMethod)) {
                                 continue;
@@ -312,8 +320,20 @@ class LaravelRequestDocs
                                 $this->appendExample($doc);
                             }
 
-                            if (method_exists($requestObject, 'fieldDescriptions')) {
-                                $doc->setFieldInfo($requestObject->fieldDescriptions());
+                            if (method_exists($requestObject, 'getFieldDescription')) {
+                                $modelName    = preg_replace(
+                                    config('request-docs.pattern_model_from_controller_name'),
+                                    '',
+                                    class_basename($doc->getController())
+                                );
+                                $descriptions = $requestObject->getFieldDescription($modelName);
+                                $isArray      = array_reduce($descriptions, function ($carry, $description) {
+                                    return $carry || is_array($description);
+                                }, false);
+
+                                if (!$isArray) {
+                                    $doc->setFieldInfo($requestObject->getFieldDescription($modelName));
+                                }
                             }
                         }
                     } catch (Throwable $e) {

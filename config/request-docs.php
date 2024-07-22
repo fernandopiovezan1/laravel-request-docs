@@ -203,5 +203,9 @@ return [
         'min',
         'max',
         'nullable',
+    ],
+
+    'method_help' => [
+        'index' => '',
     ]
 ];

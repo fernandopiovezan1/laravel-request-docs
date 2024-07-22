@@ -67,6 +67,20 @@ export default function ApiInfoRules(props: Props) {
 
         return (<>{concatRules}</>);
     }
+
+    const renderDescription = (description: string): JSX.Element => {
+        const parts = description.split(/<br\s*\/?>/g);
+        return (
+            <code className="text-xs text-gray-500">
+                {parts.map((part, index) => (
+                    <React.Fragment key={index}>
+                        {part}
+                        {index < parts.length - 1 && <br />}
+                    </React.Fragment>
+                ))}
+            </code>
+        );
+    };
     return (
         <>
             <tr className="-pb-2">
@@ -96,8 +110,7 @@ export default function ApiInfoRules(props: Props) {
                                             <code className="text-xs text-gray-500">Description: </code>
                                         </div>
                                         <div className="col-span-4">
-                                            <code
-                                                className="text-xs text-gray-500">{infos?.[mainRule]?.description.toString()} </code>
+                                            {renderDescription(infos?.[mainRule]?.description)}
                                         </div>
                                     </div>
                                 )}

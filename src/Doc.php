@@ -148,6 +148,13 @@ class Doc implements Arrayable
     private string $tag;
 
     /**
+     * Endpoint method help.
+     *
+     * @var string
+     */
+    private string $methodHelp;
+
+    /**
      * @param string $uri
      * @param string[] $methods
      * @param string[] $middlewares
@@ -164,6 +171,7 @@ class Doc implements Arrayable
      * @param string $summary
      * @param string $description
      * @param string $tag
+     * @param string $methodHelp
      */
     public function __construct(
         string $uri,
@@ -181,7 +189,8 @@ class Doc implements Arrayable
         array $rulesOrder,
         string $summary,
         string $description,
-        string $tag
+        string $tag,
+        string $methodHelp,
     ) {
         $this->uri                = $uri;
         $this->methods            = $methods;
@@ -200,6 +209,7 @@ class Doc implements Arrayable
         $this->summary            = $summary;
         $this->description        = $description;
         $this->tag                = $tag;
+        $this->methodHelp         = $methodHelp;
     }
 
     /**
@@ -493,6 +503,16 @@ class Doc implements Arrayable
         $this->tag = $tag;
     }
 
+    public function getMethodHelp(): string
+    {
+        return $this->methodHelp;
+    }
+
+    public function setMethodHelp(string $methodHelp): void
+    {
+        $this->methodHelp = $methodHelp;
+    }
+
     public function toArray(): array
     {
         $result = [
@@ -512,6 +532,7 @@ class Doc implements Arrayable
             'field_info'           => $this->fieldInfo,
             'rules_order'          => $this->rulesOrder,
             'tag'                  => $this->tag,
+            'method_help'          => $this->methodHelp,
         ];
 
         if (isset($this->group)) {

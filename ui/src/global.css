@@ -147,3 +147,16 @@ h2[id] {
 .response-500,.response-501,.response-502,.response-503 {
     @apply bg-red-400 text-red-800;
 }
+.markdown ul {
+    list-style-type: disc;
+    margin-left: 20px;
+    padding-left: 20px;
+}
+.markdown ol {
+    list-style-type: decimal;
+    margin-left: 20px;
+    padding-left: 20px;
+}
+.markdown li {
+    margin-bottom: 4px;
+}
