@@ -261,7 +261,7 @@ class LaravelRequestDocs
                 }
 
                 $controllerMethodLrdComment = $this->lrdDocComment($controllerMethodDocComment);
-                $controllerMethodDocRules   = $this->customParamsDocComment($controllerMethodDocComment);
+                $controllerMethodDocRules = $this->customParamsDocComment($controllerMethodDocComment);
 
                 $doc->setResponses($this->customResponsesDocComment($controllerMethodDocComment));
 
@@ -269,46 +269,46 @@ class LaravelRequestDocs
                 foreach ($controllerReflectionMethod->getParameters() as $param) {
                     /** @var \ReflectionNamedType|\ReflectionUnionType|\ReflectionIntersectionType|null $namedType */
                     $namedType = $param->getType();
-                    if (!$namedType) {
+                    if (! $namedType) {
                         continue;
                     }
-
-                try {
-                    if (!method_exists($namedType, 'getName')) {
-                        continue;
-                    }
-
-                    $requestClassName = $namedType->getName();
-
-                    if (!class_exists($requestClassName)) {
-                        continue;
-                    }
-
-                    $reflectionClass = new ReflectionClass($requestClassName);
 
                     try {
-                        $requestObject = $reflectionClass->newInstance();
-                    } catch (Throwable $ex) {
-                        $requestObject = $reflectionClass->newInstanceWithoutConstructor();
-                    }
+                        if (! method_exists($namedType, 'getName')) {
+                            continue;
+                        }
+
+                        $requestClassName = $namedType->getName();
+
+                        if (! class_exists($requestClassName)) {
+                            continue;
+                        }
+
+                        $reflectionClass = new ReflectionClass($requestClassName);
+
+                        try {
+                            $requestObject = $reflectionClass->newInstance();
+                        } catch (Throwable $ex) {
+                            $requestObject = $reflectionClass->newInstanceWithoutConstructor();
+                        }
 
                         foreach (config('request-docs.rules_methods') as $requestMethod) {
-                            if (!method_exists($requestObject, $requestMethod)) {
+                            if (! method_exists($requestObject, $requestMethod)) {
                                 continue;
                             }
 
-                        try {
-                            $doc->mergeRules($this->flattenRules($requestObject->$requestMethod()));
-                            $requestReflectionMethod = new ReflectionMethod($requestObject, $requestMethod);
-                        } catch (Throwable $ex) {
-                            $doc->mergeRules($this->rulesByRegex($requestClassName, $requestMethod));
-                            $requestReflectionMethod = new ReflectionMethod($requestClassName, $requestMethod);
-                        }
+                            try {
+                                $doc->mergeRules($this->flattenRules($requestObject->$requestMethod()));
+                                $requestReflectionMethod = new ReflectionMethod($requestObject, $requestMethod);
+                            } catch (Throwable $ex) {
+                                $doc->mergeRules($this->rulesByRegex($requestClassName, $requestMethod));
+                                $requestReflectionMethod = new ReflectionMethod($requestClassName, $requestMethod);
+                            }
 
                             $requestMethodDocComment = $this->getDocComment($requestReflectionMethod);
 
                             $requestMethodLrdComment = $this->lrdDocComment($requestMethodDocComment);
-                            $requestMethodDocRules   = $this->customParamsDocComment($requestMethodDocComment);
+                            $requestMethodDocRules = $this->customParamsDocComment($requestMethodDocComment);
 
                             $lrdDocComments[] = $requestMethodLrdComment;
                             $doc->mergeRules($requestMethodDocRules);
@@ -325,10 +325,13 @@ class LaravelRequestDocs
                     }
                 }
 
-            $lrdDocComments[] = $controllerMethodLrdComment;
-            $lrdDocComments   = array_filter($lrdDocComments, static fn ($s) => $s !== '');
-            $doc->setDocBlock(join("\n", $lrdDocComments));
-            $doc->mergeRules($controllerMethodDocRules);
+                $lrdDocComments[] = $controllerMethodLrdComment;
+                $lrdDocComments   = array_filter($lrdDocComments, static fn ($s) => $s !== '');
+                $doc->setDocBlock(join("\n", $lrdDocComments));
+                $doc->mergeRules($controllerMethodDocRules);
+            } catch (Throwable $ex) {
+                // Do nothing.
+            }
         }
 
         return $docs;
