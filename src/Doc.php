@@ -11,8 +11,6 @@ class Doc implements Arrayable
 {
     /**
      * The URI pattern the route responds to.
-     *
-     * @var string
      */
     private string $uri;
 
@@ -35,31 +33,23 @@ class Doc implements Arrayable
     /**
      * The route controller short name.
      * Empty if the route action is a closure.
-     *
-     * @var string
      */
     private string $controller;
 
     /**
      * The controller fully qualified name used for the route.
      * Empty if the route action is a closure.
-     *
-     * @var string
      */
     private string $controllerFullPath;
 
     /**
      * The (Controller) method name of the route action.
      * Empty if the route action is a closure.
-     *
-     * @var string
      */
     private string $method;
 
     /**
      * The HTTP method the route responds to.
-     *
-     * @var string
      */
     private string $httpMethod;
 
@@ -79,8 +69,6 @@ class Doc implements Arrayable
 
     /**
      * The additional description about this route.
-     *
-     * @var string
      */
     private string $docBlock;
 
@@ -94,21 +82,17 @@ class Doc implements Arrayable
     /**
      * A list of route path parameters, such as `/users/{id}`.
      *
-     * @var array<string, string>
+     * @var array<string, string[]>
      */
     private array $pathParameters;
 
     /**
      * The group name of the route.
-     *
-     * @var string
      */
     private string $group;
 
     /**
      * The group index of the group, determine the ordering.
-     *
-     * @var int
      */
     private int $groupIndex;
 
@@ -202,17 +186,11 @@ class Doc implements Arrayable
         $this->tag                = $tag;
     }
 
-    /**
-     * @return string
-     */
     public function getUri(): string
     {
         return $this->uri;
     }
 
-    /**
-     * @param  string  $uri
-     */
     public function setUri(string $uri): void
     {
         $this->uri = $uri;
@@ -250,49 +228,31 @@ class Doc implements Arrayable
         $this->middlewares = $middlewares;
     }
 
-    /**
-     * @return string
-     */
     public function getController(): string
     {
         return $this->controller;
     }
 
-    /**
-     * @param  string  $controller
-     */
     public function setController(string $controller): void
     {
         $this->controller = $controller;
     }
 
-    /**
-     * @return string
-     */
     public function getControllerFullPath(): string
     {
         return $this->controllerFullPath;
     }
 
-    /**
-     * @param  string  $controllerFullPath
-     */
     public function setControllerFullPath(string $controllerFullPath): void
     {
         $this->controllerFullPath = $controllerFullPath;
     }
 
-    /**
-     * @return string
-     */
     public function getMethod(): string
     {
         return $this->method;
     }
 
-    /**
-     * @param  string  $method
-     */
     public function setMethod(string $method): void
     {
         $this->method = $method;
@@ -398,7 +358,7 @@ class Doc implements Arrayable
     }
 
     /**
-     * @return array
+     * @return string[]
      */
     public function getResponses(): array
     {
@@ -406,7 +366,7 @@ class Doc implements Arrayable
     }
 
     /**
-     * @param  array  $responses
+     * @param  string[]  $responses
      */
     public function setResponses(array $responses): void
     {
@@ -414,14 +374,14 @@ class Doc implements Arrayable
     }
 
     /**
-     * @return array<string, string>
+     * @return array<string, string[]>
      */
     public function getPathParameters(): array
     {
         return $this->pathParameters;
     }
 
-    public function clone(): Doc
+    public function clone(): self
     {
         return clone $this;
     }
@@ -493,6 +453,9 @@ class Doc implements Arrayable
         $this->tag = $tag;
     }
 
+    /**
+     * @return array<string, mixed>
+     */
     public function toArray(): array
     {
         $result = [

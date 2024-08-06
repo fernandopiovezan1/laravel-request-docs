@@ -15,18 +15,19 @@ class WelcomeController
 {
     /**
      * Before
+     *
      * @lrd:start
      * #Hello markdown
      * ## Documentation for /my route
      * @lrd:end
      * After
      */
-    public function index(WelcomeIndexRequest $request)
+    public function index(WelcomeIndexRequest $request): int
     {
         return 1;
     }
 
-    public function show()
+    public function show(): int
     {
         return 1;
     }
@@ -38,17 +39,17 @@ class WelcomeController
      * @LRDparam search_boolean boolean
      * @LRDresponses 200|400|401
      */
-    public function edit(WelcomeEditRequest $request)
+    public function edit(WelcomeEditRequest $request): int
     {
         return 1;
     }
 
-    public function store(int $id, WelcomeStoreRequest $request)
+    public function store(int $id, WelcomeStoreRequest $request): int
     {
         return 1;
     }
 
-    public function destroy(WelcomeDeleteRequest $request)
+    public function destroy(WelcomeDeleteRequest $request): int
     {
         return 1;
     }
@@ -56,12 +57,15 @@ class WelcomeController
     /**
      * Test request without `rules` method
      */
-    public function noRules(RequestWithoutRules $request)
+    public function noRules(RequestWithoutRules $request): int
     {
         return 1;
     }
 
-    public function health($unknown)
+    /**
+     * @param mixed $unknown
+     */
+    public function health($unknown): int
     {
         return 1;
     }
